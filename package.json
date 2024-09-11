@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@schedule-x/event-modal": "^1.63.0",
+    "@schedule-x/events-service": "^1.63.0",
+    "@schedule-x/react": "^1.62.0",
+    "@schedule-x/theme-default": "^1.63.0",
+    "he": "^1.2.0",
+    "next-nprogress-bar": "^2.3.13"
+  }
+}
