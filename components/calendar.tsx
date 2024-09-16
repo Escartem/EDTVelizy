@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import NProgress from 'next-nprogress-bar';
 import { createEventModalPlugin } from '@schedule-x/event-modal'
-import { error } from 'console';
 
 export default function Calendar({group}: {group: string}) {
 	const eventsServicePlugin = createEventsServicePlugin();
