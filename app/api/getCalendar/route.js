@@ -34,7 +34,8 @@ export async function GET(request) {
 			"Accept": "application/json, text/javascript, */*; q=0.01"
 		},
 		body: `start=${date}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`
-	});
+	})
+	.catch(error => {return new Response(error)})
 
 	// blue red yellow purple
 	const colors = {
@@ -59,6 +60,7 @@ export async function GET(request) {
 			},
 			body: `eventId=${event.id}`
 		})
+		.catch(error => {return new Response(error)})
 
 		let meta = await res.json()
 

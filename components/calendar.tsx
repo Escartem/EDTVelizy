@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import NProgress from 'next-nprogress-bar';
 import { createEventModalPlugin } from '@schedule-x/event-modal'
+import { error } from 'console';
 
 export default function Calendar({group}: {group: string}) {
 	const eventsServicePlugin = createEventsServicePlugin();
@@ -35,7 +36,8 @@ export default function Calendar({group}: {group: string}) {
 			NProgress.startProgress()
 			fetch(`/api/getCalendar?date=${curDate}&group=${curGroup}&week=true`)
 				.then(res => res.json())
-				.then(data => {eventsService.set(data); NProgress.stopProgress()});
+				.then(data => {eventsService.set(data); NProgress.stopProgress()})
+				.catch(error => {console.error(error); NProgress.stopProgress()})
 		}
 	}, [curDate, eventsService, curGroup]);
 
