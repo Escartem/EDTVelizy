@@ -1,4 +1,4 @@
-var he = require('he');
+import { decode } from "he";
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
@@ -85,7 +85,7 @@ export async function GET(request) {
 
 		calendar.push({
 			id: event.id,
-			title: he.decode((meta.Module ? meta.Module : meta.Modules) || "Aucun nom"),
+			title: decode((meta.Module ? meta.Module : meta.Modules) || "Aucun nom"),
 			people: meta.Staff ? meta.Staff.split(", ") : ["Aucun prof"],
 			start: convertDateTime(event.start),
 			end: convertDateTime(event.end),

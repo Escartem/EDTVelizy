@@ -10,6 +10,7 @@ import { createEventModalPlugin } from '@schedule-x/event-modal'
 
 export default function Calendar({group}: {group: string}) {
 	const eventsServicePlugin = createEventsServicePlugin();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [eventsService, setEventsService] = useState<any>();
 	const [curDate, setCurDate] = useState(new Date().toISOString().slice(0, 10));
 	const curGroup = group;
@@ -25,6 +26,7 @@ export default function Calendar({group}: {group: string}) {
 		}, 100);
 
 		return () => clearInterval(checkFacadeInterval);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// fetch cours
@@ -35,7 +37,7 @@ export default function Calendar({group}: {group: string}) {
 				.then(res => res.json())
 				.then(data => {eventsService.set(data); NProgress.stopProgress()});
 		}
-	}, [curDate, eventsService]);
+	}, [curDate, eventsService, curGroup]);
 
 	// config du calendrier
 	const calendar = useNextCalendarApp({

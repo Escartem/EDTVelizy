@@ -14,14 +14,14 @@ export default function Schedule() {
     useEffect(() => {
 		setGroup(window?.localStorage?.getItem("group"));
         setGroupLoaded(true);
-	})
+	}, [])
 
     // aucun groupe, on retourne a l'accueil
     useEffect(() => {
 		if (!group && groupLoaded) {
 			router.push("/");
 		}
-	}, [group, groupLoaded])
+	}, [group, groupLoaded, router])
 
     return (
         <div className="h-full w-full flex flex-col items-center justify-center overflow-hidden">
