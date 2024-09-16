@@ -12,6 +12,7 @@ export async function GET(request) {
 	}
 
 	const url = urls[group.split("@")[0]];
+	console.log(url)
 
 	// week mode
 	let endDate
@@ -26,6 +27,8 @@ export async function GET(request) {
 		endDate = date;
 	}
 
+	console.log(endDate)
+
 	// a moi l'edt
 	const res = await fetch(`https://${url}/Home/GetCalendarData`, {
 		method: "POST",
@@ -36,6 +39,8 @@ export async function GET(request) {
 		body: `start=${date}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`
 	})
 	.catch(error => {return new Response(error)})
+
+	console.log(res.status)
 
 	// blue red yellow purple
 	const colors = {
@@ -52,6 +57,7 @@ export async function GET(request) {
 
 	// refetch chaque cours
 	for (const event of events) {
+		console.log(event)
 		const res = await fetch(`https://${url}/Home/GetSideBarEvent`, {
 			method: "POST",
 			headers: {
@@ -63,6 +69,7 @@ export async function GET(request) {
 		.catch(error => {return new Response(error)})
 
 		let meta = await res.json()
+		console.log(meta)
 
 		// return new Response(JSON.stringify(meta));
 		const renames = {
@@ -85,6 +92,8 @@ export async function GET(request) {
 			return obj
 		}, {})
 
+		console.log(meta)
+
 		calendar.push({
 			id: event.id,
 			title: decode((meta.Module ? meta.Module : meta.Modules) || "Aucun nom"),
@@ -94,6 +103,8 @@ export async function GET(request) {
 			calendarId: colors[event.eventCategory],
 			location: meta.Room
 		});
+
+		console.log(calendar)
 	}
 
 	return new Response(JSON.stringify(calendar));
