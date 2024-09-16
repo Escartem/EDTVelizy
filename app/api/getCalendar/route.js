@@ -1,4 +1,5 @@
 import { decode } from "he";
+export const maxDuration = 60;
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
