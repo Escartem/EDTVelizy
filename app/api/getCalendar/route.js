@@ -1,4 +1,3 @@
-import { decode } from "he";
 export const maxDuration = 60;
 
 export async function GET(request) {
@@ -51,49 +50,17 @@ export async function GET(request) {
 	const events = await res.json();
 	let calendar = [];
 
-	// refetch chaque cours
 	for (const event of events) {
-		const res = await fetch(`https://${url}/Home/GetSideBarEvent`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-				"Accept": "application/json, text/javascript, */*; q=0.01"
-			},
-			body: `eventId=${event.id}`
-		})
-		.catch(error => {return new Response(error)})
-
-		let meta = await res.json()
-
-		// return new Response(JSON.stringify(meta));
-		const renames = {
-			"Salle": "Room",
-			"Elément pédagogique": "Module",
-			"Catégorie d'évènement": "eventCategory"
-		}
-
-		// staff bizzare
-		meta = meta.elements.reduce((obj, x) => {
-			if (!x.label) {
-				obj["Staff"] = obj["Staff"] ? obj["Staff"] + ", " + x.content : x.content
-			} else {
-				if (renames[x.label]) {
-					obj[renames[x.label]] = x.content
-				} else {
-					obj[x.label] = x.content
-				}
-			}
-			return obj
-		}, {})
+		let meta = event.description.split("<br />")
 
 		calendar.push({
 			id: event.id,
-			title: decode((meta.Module ? meta.Module : meta.Modules) || "Aucun nom"),
-			people: meta.Staff ? meta.Staff.split(", ") : ["Aucun prof"],
+			title: meta[3],
+			people: [meta[0]],
+			location: meta[2],
+			calendarId: colors[event.eventCategory],
 			start: convertDateTime(event.start),
 			end: convertDateTime(event.end),
-			calendarId: colors[event.eventCategory],
-			location: meta.Room
 		});
 	}
 

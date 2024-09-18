@@ -10,7 +10,6 @@ import { createEventModalPlugin } from '@schedule-x/event-modal'
 
 export default function Calendar({group}: {group: string}) {
 	const eventsServicePlugin = createEventsServicePlugin();
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [eventsService, setEventsService] = useState<any>();
 	const [curDate, setCurDate] = useState(new Date().toISOString().slice(0, 10));
 	const curGroup = group;
@@ -33,12 +32,37 @@ export default function Calendar({group}: {group: string}) {
 	useEffect(() => {
 		if (eventsService) {
 			NProgress.startProgress()
-			fetch(`/api/getCalendar?date=${curDate}&group=${curGroup}&week=true`)
-				.then(res => res.json())
-				.then(data => {eventsService.set(data); NProgress.stopProgress()})
-				.catch(error => {console.error(error); NProgress.stopProgress()})
+
+			const updateSchedule = async () => {
+				const data = await fetch(`/api/getCalendar?date=${curDate}&group=${curGroup}&week=true`)
+				const infos = await data.json()
+				eventsService.set(infos)
+	
+				console.log(infos)
+				for (let i = 0; i < infos.length; i++) {
+					const event = infos[i]
+					let newInfos: any = await fetch(`/api/getEvent?id=${event.id}&loc=${group.split("@")[0]}`)
+	
+					newInfos = await newInfos.json()
+					const newEvent = {
+						id: event.id,
+						title: newInfos.title,
+						people: newInfos.people,
+						start: event.start,
+						end: event.end,
+						calendarId: event.calendarId,
+						location: newInfos.location,
+					}
+					infos.splice(i, 1, newEvent)
+					eventsService.set(infos)
+				}
+	
+				NProgress.stopProgress()
+			}
+
+			updateSchedule()
 		}
-	}, [curDate, eventsService, curGroup]);
+	}, [curDate, curGroup, eventsService]);
 
 	// config du calendrier
 	const calendar = useNextCalendarApp({
