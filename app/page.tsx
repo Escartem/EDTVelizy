@@ -36,7 +36,7 @@ export default function Home() {
 		}
 	}, [loc, query])
 
-	const debouncedHandleInputChange = debounce(handleQuery, 500);
+	const debouncedHandleInputChange = debounce(handleQuery, 10);
 
 	return (
 		<div className="h-full w-full flex items-center justify-center overflow-hidden">

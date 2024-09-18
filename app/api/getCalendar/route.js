@@ -5,7 +5,7 @@ export const maxDuration = 60;
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
 	let date = searchParams.get("date");
-	const group = searchParams.get("group");
+	const group = searchParams.get("group").split("@");
 	const week = searchParams.get("week");
 
 	const urls = {
@@ -13,7 +13,7 @@ export async function GET(request) {
 		"VER": "edt.uvsq.fr"
 	}
 
-	const url = urls[group.split("@")[0]];
+	const url = urls[group[0]];
 
 	// week mode
 	let endDate, startDate
@@ -25,8 +25,6 @@ export async function GET(request) {
 		endDate = date;
 	}
 
-	console.log(`start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`)
-
 	// a moi l'edt
 	const res = await fetch(`https://${url}/Home/GetCalendarData`, {
 		method: "POST",
@@ -34,7 +32,7 @@ export async function GET(request) {
 			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 			"Accept": "application/json, text/javascript, */*; q=0.01"
 		},
-		body: `start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`
+		body: `start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group[1]}&colourScheme=3`
 	})
 	.catch(error => {return new Response(error)})
 
@@ -52,13 +50,13 @@ export async function GET(request) {
 	let calendar = [];
 
 	for (const event of events) {
-		let meta = event.description.split("<br />")
+		let meta = event.description.replaceAll("\r\n", "").split("<br />")
 
 		calendar.push({
 			id: event.id,
-			title: meta[3],
-			people: [meta[0]],
-			location: meta[2],
+			title: group[0] == "VEL" ? meta[3] : meta[2].split(" - ")[1],
+			people: group[0] == "VEL" ? [meta[0]] : ["Aucun prof"],
+			location: group[0] == "VEL" ? meta[2] : meta[1],
 			calendarId: colors[event.eventCategory],
 			start: convertDateTime(event.start),
 			end: convertDateTime(event.end),
