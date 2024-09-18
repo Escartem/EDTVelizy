@@ -1,3 +1,5 @@
+import { start } from "repl";
+
 export const maxDuration = 60;
 
 export async function GET(request) {
@@ -14,17 +16,16 @@ export async function GET(request) {
 	const url = urls[group.split("@")[0]];
 
 	// week mode
-	let endDate
+	let endDate, startDate
 	if (week) {
-		const temp = new Date(date);
-		let day = temp.getDay();
-		let diff = temp.getDate() - day + (day == 0 ? -6 : 1);
-		date = new Date(diff).toISOString().split('T')[0];
-		temp.setDate(diff + 7)
-		endDate = temp.toISOString().split('T')[0];
+		startDate = getMonday(date).toISOString().split('T')[0];
+		endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 6)).toISOString().split('T')[0];
 	} else {
+		startDate = date;
 		endDate = date;
 	}
+
+	console.log(`start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`)
 
 	// a moi l'edt
 	const res = await fetch(`https://${url}/Home/GetCalendarData`, {
@@ -33,7 +34,7 @@ export async function GET(request) {
 			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 			"Accept": "application/json, text/javascript, */*; q=0.01"
 		},
-		body: `start=${date}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`
+		body: `start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group.split("@")[1]}&colourScheme=3`
 	})
 	.catch(error => {return new Response(error)})
 
@@ -65,6 +66,13 @@ export async function GET(request) {
 	}
 
 	return new Response(JSON.stringify(calendar));
+}
+
+function getMonday(d) {
+	d = new Date(d)
+	var day = d.getDay()
+	var diff = d.getDate() - day + (day == 0 ? -6 : 1)
+	return new Date(d.setDate(diff))
 }
 
 function convertDateTime(input) {
