@@ -60,6 +60,7 @@ export async function GET(request) {
 			calendarId: colors[event.eventCategory],
 			start: convertDateTime(event.start),
 			end: convertDateTime(event.end),
+			full: 0
 		});
 	}
 

@@ -12,6 +12,7 @@ export default function Calendar({group}: {group: string}) {
 	const eventsServicePlugin = createEventsServicePlugin();
 	const [eventsService, setEventsService] = useState<any>();
 	const [curDate, setCurDate] = useState(new Date().toISOString().slice(0, 10));
+	const [fullSchedule, setFullSchedule] = useState<any>({});
 	const curGroup = group;
 
 	// attente plugin
@@ -36,11 +37,24 @@ export default function Calendar({group}: {group: string}) {
 			const updateSchedule = async () => {
 				const data = await fetch(`/api/getCalendar?date=${curDate}&group=${curGroup}&week=true`)
 				const infos = await data.json()
-				eventsService.set(infos)
+				var tempFullSchedule = fullSchedule
+
+				for (const event of infos) {
+					if (tempFullSchedule[event.id] === undefined) {
+						tempFullSchedule[event.id] = event
+					}
+				}
+
+				setFullSchedule(tempFullSchedule)
+				eventsService.set(Object.values(fullSchedule))
 	
-				console.log(infos)
 				for (let i = 0; i < infos.length; i++) {
-					const event = infos[i]
+					const event = fullSchedule[infos[i].id]
+
+					if (event.full == 1) {
+						continue
+					}
+
 					let newInfos: any = await fetch(`/api/getEvent?id=${event.id}&loc=${group.split("@")[0]}`)
 	
 					newInfos = await newInfos.json()
@@ -52,9 +66,11 @@ export default function Calendar({group}: {group: string}) {
 						end: event.end,
 						calendarId: event.calendarId,
 						location: newInfos.location,
+						full: 1
 					}
-					infos.splice(i, 1, newEvent)
-					eventsService.set(infos)
+					tempFullSchedule[event.id] = newEvent
+					setFullSchedule(tempFullSchedule)
+					eventsService.set(Object.values(fullSchedule))
 				}
 	
 				NProgress.stopProgress()
