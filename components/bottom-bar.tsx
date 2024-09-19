@@ -12,8 +12,8 @@ export default function BottomBar({group}: {group: string}) {
 				<span className="hidden md:block">{`Changer de groupe (${group?.split("@")[1]})`}</span>
 				<span className="block md:hidden">Changer le groupe</span>
 			</Button>
-			{/* <Button onClick={() => {window.open("https://github.com/Escartem/EDTVelizy", "_blank")}} className="text-white" variant="link">GitHub</Button> */}
-			<Button disabled={true} className="text-white" variant="link">Activer les notifications</Button>
+			<Button onClick={() => {window.open("https://github.com/Escartem/EDTVelizy", "_blank")}} className="text-white" variant="link">GitHub</Button>
+			{/* <Button disabled={true} className="text-white" variant="link">Activer les notifications</Button> */}
 		</div>
 	)
 }
