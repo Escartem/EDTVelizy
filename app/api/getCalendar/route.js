@@ -1,5 +1,3 @@
-import { start } from "repl";
-
 export const maxDuration = 60;
 
 export async function GET(request) {
