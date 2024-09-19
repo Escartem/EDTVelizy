@@ -17,7 +17,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
 	title: "EDT Velizy",
-	description: "Emploi du temps mais mieux",
+	description: "Emploi du temps CELCAT amélioré",
 };
 
 export default function RootLayout({
