@@ -20,13 +20,9 @@ export default function Home() {
 	}
 
 	// recherche de groupe
-	const handleQuery = (value: string) => {
-		setQuery(value);
-	}
-
 	useEffect(() => {
 		const getResults = async () => {
-			const res = await fetch(`/api/getGroups?query=${query}&group=${loc}`);
+			const res = await fetch(`/api/getGroups?query=${query}&loc=${loc}`);
 			const data = await res.json();
 			setResults(data);
 		}
@@ -36,7 +32,7 @@ export default function Home() {
 		}
 	}, [loc, query])
 
-	const debouncedHandleInputChange = debounce(handleQuery, 10);
+	const debouncedHandleInputChange = debounce(setQuery, 10);
 
 	return (
 		<div className="h-full w-full flex items-center justify-center overflow-hidden">

@@ -1,15 +1,22 @@
 export const maxDuration = 60;
+import { urls } from "@/lib/utils";
+
+function getMonday(d) {
+	d = new Date(d)
+	var day = d.getDay()
+	var diff = d.getDate() - day + (day == 0 ? -6 : 1)
+	return new Date(d.setDate(diff))
+}
+
+function convertDateTime(input) {
+	return input.replace('T', ' ').slice(0, 16);
+}
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
 	let date = searchParams.get("date");
 	const group = searchParams.get("group").split("@");
 	const week = searchParams.get("week");
-
-	const urls = {
-		"VEL": "edt.iut-velizy.uvsq.fr",
-		"VER": "edt.uvsq.fr"
-	}
 
 	const url = urls[group[0]];
 
@@ -63,15 +70,4 @@ export async function GET(request) {
 	}
 
 	return new Response(JSON.stringify(calendar));
-}
-
-function getMonday(d) {
-	d = new Date(d)
-	var day = d.getDay()
-	var diff = d.getDate() - day + (day == 0 ? -6 : 1)
-	return new Date(d.setDate(diff))
-}
-
-function convertDateTime(input) {
-	return input.replace('T', ' ').slice(0, 16);
 }

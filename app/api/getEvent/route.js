@@ -1,17 +1,11 @@
 import { decode } from "he";
+import { urls } from "@/lib/utils";
 export const maxDuration = 60;
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
-	const loc = searchParams.get("loc");
 	const id = searchParams.get("id");
-
-	const urls = {
-		"VEL": "edt.iut-velizy.uvsq.fr",
-		"VER": "edt.uvsq.fr"
-	}
-
-	const url = urls[loc];
+	const url = urls[searchParams.get("loc")];
 
 	const res = await fetch(`https://${url}/Home/GetSideBarEvent`, {
 		method: "POST",
