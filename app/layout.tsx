@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ProgressProvider from "@/components/progress-provider";
 import { ThemeProvider } from "@/components/theme-provider"
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -34,6 +35,8 @@ export default function RootLayout({
 					</ProgressProvider>
 				</ThemeProvider>
 			</body>
+
+			<GoogleAnalytics gaId="G-HB97VBP32C" />
 		</html>
 	);
 }
