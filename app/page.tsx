@@ -13,8 +13,9 @@ export default function Home() {
 	const [query, setQuery] = useState<string | null>(null);
 	const [results, setResults] = useState<{[key: string]: string}[]>([]);
 	const [loc, setLoc] = useState<string>("VEL");
+	const [resType, setResType] = useState<string>("103");
 
-	const updateGroup = (group: [string, string]) => {
+	const updateGroup = (group: [string, string, string]) => {
 		const curGroup = btoa(group.join("@")).replaceAll("=", "");
 		router.push(`/schedule/${curGroup}`);
 	}
@@ -22,7 +23,7 @@ export default function Home() {
 	// recherche de groupe
 	useEffect(() => {
 		const getResults = async () => {
-			const res = await fetch(`/api/getGroups?query=${query}&loc=${loc}`);
+			const res = await fetch(`/api/getGroups?query=${query}&loc=${loc}&room=${resType == "102" ? "true" : "false"}`);
 			const data = await res.json();
 			setResults(data);
 		}
@@ -42,9 +43,9 @@ export default function Home() {
 					<span className="text-md">L&apos;emploi du temps sera sauvegardé dans le navigateur et mis à jour automatiquement.</span>
 				</div>
 
-				<div className="flex w-full justify-evenly text-white">
+				<div className="flex w-full justify-evenly text-white flex-col items-center md:flex-row">
 					<Select defaultValue="VEL" onValueChange={(e) => {setLoc(e)}}>
-						<SelectTrigger className="w-[180px]">
+						<SelectTrigger className="w-[180px] m-2">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
@@ -55,9 +56,21 @@ export default function Home() {
 						</SelectContent>
 					</Select>
 
+					<Select defaultValue="103" onValueChange={(e) => {setResType(e)}}>
+						<SelectTrigger className="w-[180px] m-2">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectGroup>
+								<SelectItem value="103">Groupe</SelectItem>
+								<SelectItem value="102">Salle</SelectItem>
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+
 					<Popover>
 						<PopoverTrigger>
-							<Button variant="outline" role="combobox" className="text-md">
+							<Button variant="outline" role="combobox" className="text-md m-2 w-[180px]">
 								Chercher un groupe
 							</Button>
 						</PopoverTrigger>
@@ -69,7 +82,7 @@ export default function Home() {
 										{results.length > 0 ? (
 											<>
 												{results.map((result: {[id: string]: string}) => (
-													<CommandItem key={result.id} onSelect={() => {updateGroup([loc, result.id])}}>
+													<CommandItem key={result.id} onSelect={() => {updateGroup([loc, result.id, resType])}}>
 														{result.text}
 													</CommandItem>
 												))}

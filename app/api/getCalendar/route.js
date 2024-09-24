@@ -37,7 +37,7 @@ export async function GET(request) {
 			"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 			"Accept": "application/json, text/javascript, */*; q=0.01"
 		},
-		body: `start=${startDate}&end=${endDate}&resType=103&calView=agendaDay&federationIds%5B%5D=${group[1]}&colourScheme=3`
+		body: `start=${startDate}&end=${endDate}&resType=${group[2]}&calView=agendaDay&federationIds%5B%5D=${group[1]}&colourScheme=3`
 	})
 	.catch(error => {return new Response(error)})
 
