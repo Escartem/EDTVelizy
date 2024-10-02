@@ -16,6 +16,9 @@ export async function GET(request) {
 	const { searchParams } = new URL(request.url);
 	let date = searchParams.get("date");
 	const group = searchParams.get("group").split("@");
+	if (group.length == 2) {
+		group.push("103");
+	}
 	const week = searchParams.get("week");
 
 	const url = urls[group[0]];
