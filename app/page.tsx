@@ -71,7 +71,7 @@ export default function Home() {
 					<Popover>
 						<PopoverTrigger>
 							<Button variant="outline" role="combobox" className="text-md m-2 w-[180px]">
-								Chercher un groupe
+								{resType == "103" ? "Chercher un groupe" : "Chercher une salle"}
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="p-0 z-100">
