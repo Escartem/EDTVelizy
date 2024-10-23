@@ -19,28 +19,43 @@ export async function GET(request) {
 
 	let meta = await res.json();
 
+	const result = [];
+
+	// fusion des éléments sans label
+	for (let i = 0; i < meta.elements.length; i++) {
+        if (meta.elements[i].label === null) {
+            if (result.length > 0) {
+                result[result.length - 1].content += ", " + meta.elements[i].content;
+            }
+        } else {
+            result.push({ ...meta.elements[i] });
+        }
+    }
+
+	meta = result;
+
 	const renames = {
 		"Salle": "Room",
+		"Rooms": "Room",
 		"Elément pédagogique": "Module",
-		"Catégorie d'évènement": "eventCategory"
+		"Modules": "Module",
+		"Catégorie d'évènement": "eventCategory",
+		"Remarques": "Remark",
+		"Notes": "Remark",
 	}
 
 	// staff bizzare
-	meta = meta.elements.reduce((obj, x) => {
-		if (!x.label) {
-			obj["Staff"] = obj["Staff"] ? obj["Staff"] + ", " + x.content : x.content
+	meta = meta.reduce((obj, x) => {
+		if (renames[x.label]) {
+			obj[renames[x.label]] = x.content
 		} else {
-			if (renames[x.label]) {
-				obj[renames[x.label]] = x.content
-			} else {
-				obj[x.label] = x.content
-			}
+			obj[x.label] = x.content
 		}
 		return obj
 	}, {})
 
 	return new Response(JSON.stringify({
-		title: decode((meta.Module ? meta.Module : meta.Modules) || "Aucun nom"),
+		title: `${decode(meta.Module || "Aucun nom")}${meta.Remark ? ` (${meta.Remark.replaceAll("<br />", "")})` : ""}`,
 		people: meta.Staff ? meta.Staff.split(", ") : ["Aucun prof"],
 		location: meta.Room
 	}))
