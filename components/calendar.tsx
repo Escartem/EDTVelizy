@@ -58,15 +58,18 @@ export default function Calendar({group}: {group: string}) {
 					let newInfos: any = await fetch(`/api/getEvent?id=${event.id}&loc=${group.split("@")[0]}`)
 	
 					newInfos = await newInfos.json()
-					const newEvent = {
+					var newEvent = {
 						id: event.id,
-						title: newInfos.title,
+						title: event.title,
 						people: newInfos.people,
 						start: event.start,
 						end: event.end,
 						calendarId: event.calendarId,
 						location: newInfos.location,
 						full: 1
+					}
+					if (curGroup.split("@")[0] != "VEL") {
+						newEvent.title = newInfos.title;
 					}
 					tempFullSchedule[event.id] = newEvent
 					setFullSchedule(tempFullSchedule)

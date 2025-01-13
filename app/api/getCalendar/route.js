@@ -62,7 +62,7 @@ export async function GET(request) {
 
 		calendar.push({
 			id: event.id,
-			title: group[0] == "VEL" ? meta[3] : meta[2].split(" - ")[1],
+			title: group[0] == "VEL" ? (meta.length == 3 ? meta[2] : meta[3]) : meta[2].split(" - ")[1],
 			people: group[0] == "VEL" ? [meta[0]] : ["Aucun prof"],
 			location: group[0] == "VEL" ? meta[2] : meta[1],
 			calendarId: colors[event.eventCategory],
