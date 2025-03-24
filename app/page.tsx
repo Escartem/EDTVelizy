@@ -40,7 +40,7 @@ export default function Home() {
 			<div className="w-[80%] h-[80%] flex flex-col items-center justify-evenly border-2 border-gray-700 p-2 rounded-xl text-center">
 				<div className="flex flex-col text-white">
 					<span className="text-xl">L&apos;emploi du temps celcat en ligne. Pas grand chose de plus, séléction du groupe juste en dessous.</span>
-					<span className="text-md">L&apos;emploi du temps sera sauvegardé dans le navigateur et mis à jour automatiquement.</span>
+					<Button variant={"outline"} className="mt-6" onClick={() => router.push("/attendance")}>Voir ses absences</Button>
 				</div>
 
 				<div className="flex w-full justify-evenly text-white flex-col items-center md:flex-row">

@@ -4,6 +4,7 @@ import "./globals.css";
 import ProgressProvider from "@/components/progress-provider";
 import { ThemeProvider } from "@/components/theme-provider"
 import { GoogleAnalytics } from "@next/third-parties/google";
+import GlobalPopup from "@/components/global-popup";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -31,6 +32,7 @@ export default function RootLayout({
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
 					<ProgressProvider>
+						<GlobalPopup />
 						{children}
 					</ProgressProvider>
 				</ThemeProvider>
