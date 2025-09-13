@@ -19,7 +19,7 @@
     "@schedule-x/events-service": "^1.63.0",
     "@schedule-x/react": "^1.62.0",
     "@schedule-x/theme-default": "^1.63.0",
-    "axios": "^1.7.9",
+    "axios": "^1.12.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
